@@ -1,14 +1,7 @@
 ## Agentic RAG [LlamaIndex + vLLM + Flask]
 Story: https://euro-vision.atlassian.net/browse/MLAIHO-63
 
-Python Version: 3.10
-
-### Getting the ENV up
-It's a bit tricky to boot up the environemnt as ChromaDB is not behaving well with uv. We have to run the environment setup commands in below order
-- `uv venv --python 3.10`
-- `source .venv/bin/activate`
-- `python -m ensurepip --upgrade`
-- `python -m pip install -r requirements.txt`
+Python Version: 3.9
 
 ### Artifacts
 - Embedding model is running in a RunPod pod
