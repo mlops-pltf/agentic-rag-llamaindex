@@ -7,41 +7,41 @@ vector_db:
 
 embedding_model:
   baai:
-    provider: "BAAI"
-    inference_platform: "vLLM"
+    provider: "baai"
+    inference_platform: "vllm"
     inference_node_supplier: "runpod"
-    model_name: "BAAI/bge-small-en-v1.5"
+    model_name: "baai/bge-small-en-v1.5"
 
 retriever:
   top_k: 10
 
 llm:
   qwen:
-    provider: "Qwen"
-    model_name: "Qwen/Qwen2.5-Coder-7B-Instruct"
-    inference_platform: "vLLM"
+    provider: "qwen"
+    model_name: "qwen/qwen2.5-coder-7b-instruct"
+    inference_platform: "vllm"
     inference_node_supplier: "runpod"
     temperature: 0
     max_output_tokens: 2048
   openai:
-    provider: "OpenAI"
+    provider: "openai"
     model_name: "openai:gpt-4.1"
-    inference_platform: ""
-    inference_node_supplier: ""
+    inference_platform: "openai"
+    inference_node_supplier: "openai"
     temperature: 0
     max_output_tokens: 2048
   groq:
-    provider: "Groq"
+    provider: "groq"
     model_name: "deepseek-r1-distill-llama-70b"
-    inference_platform: "vLLM"
+    inference_platform: "vllm"
     inference_node_supplier: "runpod"
     temperature: 0
     max_output_tokens: 2048
   google:
-    provider: "Google"
+    provider: "google"
     model_name: "gemini-2.0-flash"
-    inference_platform: ""
-    inference_node_supplier: ""
+    inference_platform: "google"
+    inference_node_supplier: "google"
     temperature: 0
     max_output_tokens: 2048
 

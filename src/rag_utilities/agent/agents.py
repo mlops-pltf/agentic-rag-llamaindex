@@ -15,6 +15,7 @@ if __name__ == '__main__':
     os.environ["VLLM_EMBEDDING_MODEL_INFERENCE_NODE_ID"] = "dummy"
 
 app_config = get_app_config()
+print(app_config)
 # llm, embedding_model = get_models(
 #     model_id="gpt-4o-mini"
 #     , modelProvider='OpenAI'
@@ -23,14 +24,14 @@ llm = get_llm(
     model_id=app_config.llm.model_name
     , model_provider=app_config.llm.provider
     , inference_platform_type=app_config.llm.inference_platform
-    , inference_node_supplier=app_config.llm.inference_nodde_supplier
+    , inference_node_supplier=app_config.llm.inference_node_supplier
     , runpod_llm_inference_id=os.environ.get("VLLM_LLM_INFERENCE_NODE_ID")
 )
 embedding_model = get_embedder(
     model_id=app_config.embedding_model.model_name
     , model_provider=app_config.embedding_model.provider
     , inference_platform_type=app_config.embedding_model.inference_platform
-    , inference_node_supplier=app_config.embedding_model.inference_nodde_supplier
+    , inference_node_supplier=app_config.embedding_model.inference_node_supplier
     , runpod_enbedder_inference_id = os.environ.get('VLLM_EMBEDDING_MODEL_INFERENCE_NODE_ID')
 )
 
