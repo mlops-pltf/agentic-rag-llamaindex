@@ -1,11 +1,14 @@
 import chromadb
 from rag_utilities.llm.base import MyEmbedder
+from rag_utilities.utils import get_app_config
 from llama_index.core import SimpleDirectoryReader
 from llama_index.core.node_parser import SentenceSplitter
 from llama_index.core.ingestion import IngestionPipeline
 from llama_index.vector_stores.chroma import ChromaVectorStore
 
-ALLOWED_DATA_GENRES = ['educational', 'story', 'cooking', 'persona']
+app_config = get_app_config()
+# ALLOWED_DATA_GENRES = ['educational', 'story', 'cooking', 'persona']
+ALLOWED_DATA_GENRES = app_config.vector_db.allowed_data_genres
 
 def get_chroma_db():
     return chromadb.PersistentClient(path="./my_local_vector_db")

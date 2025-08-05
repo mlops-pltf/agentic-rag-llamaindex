@@ -3,7 +3,9 @@ from typing import List, Any
 from llama_index.core.llms.llm import LLM
 from llama_index.core.embeddings import BaseEmbedding
 from llama_index.core.llms import ChatMessage, ChatResponse, LLMMetadata, CompletionResponse  # Sometimes required
+from rag_utilities.utils import get_app_config
 
+app_config = get_app_config()
 
 
 ## ChatResponse with __aiter__ and __anext__

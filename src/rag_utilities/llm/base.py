@@ -1,4 +1,6 @@
+import os
 from rag_utilities.llm.qwen import RunPodLlamaIndexQwenEmbedding, RunPodLLamaIndexAgentQwenLLM
+from llama_index.llms.openai import OpenAI
 
 ## Implement Pydantic Check in this class
 class MyLLM:
@@ -10,9 +12,9 @@ class MyLLM:
         , inference_platform_type:str='vllm'
         , **kwargs
     ):
-        if inference_node_supplier.lower() == 'runpod':
-            if inference_platform_type.lower() == 'vllm':
-                if model_provider.lower() == 'qwen':
+        if model_provider.lower() == 'qwen':
+            if inference_node_supplier.lower() == 'runpod':
+                if inference_platform_type.lower() == 'vllm':
                     if kwargs.get('runpod_llm_inference_id', 'Not provided') == 'Not provided':
                         raise TypeError("MyLLM object is missing one keyword argument: 'runpod_llm_inference_id'")
                     elif not kwargs.get('runpod_llm_inference_id', 'Not provided'):
@@ -27,6 +29,10 @@ class MyLLM:
                     raise NotImplementedError(f"The interface class for '{inference_platform_type}'-'{model_provider}' model running on '{inference_node_supplier}' is not implemented yet.")
             else:
                 raise NotImplementedError(f"The interface class for '{inference_platform_type}'-'{model_provider}' model running on '{inference_node_supplier}' is not implemented yet.")
+        elif model_provider.lower() == 'openai':
+            if not os.environ.get('OPENAI_API_KEY', None):
+                raise Exception(f"`OPENAI_API_KEY` must be declared as an environment variable to use any OpenAI Model..")
+            return OpenAI(model=model_id)
         else:
             raise NotImplementedError(f"The interface class for '{inference_platform_type}'-'{model_provider}' model running on '{inference_node_supplier}' is not implemented yet.")
 

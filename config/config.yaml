@@ -18,14 +18,14 @@ retriever:
 llm:
   qwen:
     provider: "qwen"
-    model_name: "qwen/qwen2.5-coder-7b-instruct"
+    model_name: "Qwen/Qwen2.5-Coder-7B-Instruct"
     inference_platform: "vllm"
     inference_node_supplier: "runpod"
     temperature: 0
     max_output_tokens: 2048
   openai:
     provider: "openai"
-    model_name: "openai:gpt-4.1"
+    model_name: "gpt-4.1"
     inference_platform: "openai"
     inference_node_supplier: "openai"
     temperature: 0
@@ -47,4 +47,4 @@ llm:
 
 model_selector:
   embedding_model: "baai"
-  llm: "qwen"
+  llm: "openai"
