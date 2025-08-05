@@ -1,5 +1,5 @@
 import chromadb
-from src.rag_utilities.llm.llm_utils import MyEmbedder
+from rag_utilities.llm.base import MyEmbedder
 from llama_index.core import SimpleDirectoryReader
 from llama_index.core.node_parser import SentenceSplitter
 from llama_index.core.ingestion import IngestionPipeline

@@ -8,7 +8,7 @@ from llama_index.core.llms import ChatMessage, ChatResponse, LLMMetadata, Comple
 
 ## ChatResponse with __aiter__ and __anext__
 ## Note how __aiter__ is synchronous and __anext__ is asynchronous
-class _NewChatResponse(ChatResponse):
+class QwenChatResponse(ChatResponse):
     def __aiter__(self):
         return self
 
@@ -25,7 +25,7 @@ class _NewChatResponse(ChatResponse):
 ## We are implementing new class for Agent because
 ## In agent call .achat is expected to return a ChatResponse object
 ## That has to have __aiter__ and __anext__ implemented
-class _RunPodLLamaAgentQwenLLM(LLM):
+class RunPodLLamaIndexAgentQwenLLM(LLM):
     api_url: str  # Pydantic field
     overriden_model_name: str  # Pydantic field
 
@@ -36,7 +36,7 @@ class _RunPodLLamaAgentQwenLLM(LLM):
     # Async chat: core method for LlamaIndex RAG
     async def achat(
         self, messages: List[ChatMessage], **kwargs
-    ) -> _NewChatResponse:
+    ) -> QwenChatResponse:
         # Prepare payload
         payload = {
             # "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
@@ -50,7 +50,7 @@ class _RunPodLLamaAgentQwenLLM(LLM):
             async with session.post(self.api_url, json=payload) as resp:
                 result = await resp.json()
                 output_text = result["choices"][0]["message"]["content"]
-                return _NewChatResponse(message=ChatMessage(role="assistant", content=output_text))
+                return QwenChatResponse(message=ChatMessage(role="assistant", content=output_text))
 
     async def astream_chat(self, *args, **kwargs) -> Any:
         # print("Called with args:", args, "kwargs:", kwargs)
@@ -118,38 +118,7 @@ class _RunPodLLamaAgentQwenLLM(LLM):
         )
 
 
-## Implement Pydantic Check in this class
-class MyLLM:
-    def __new__(
-        cls
-        , model_id
-        , modelProvider:str='qwen'
-        , inferenceNodeSupplier:str='runpod'
-        , inferencePlatformType:str='vllm'
-        , **kwargs
-    ):
-        if inferenceNodeSupplier.lower() == 'runpod':
-            if inferencePlatformType.lower() == 'vllm':
-                if modelProvider.lower() == 'qwen':
-                    if kwargs.get('runpod_llm_inference_id', 'Not provided') == 'Not provided':
-                        raise TypeError("MyLLM object is missing one keyword argument: 'runpod_llm_inference_id'")
-                    elif not kwargs.get('runpod_llm_inference_id', 'Not provided'):
-                        raise TypeError("'runpod_llm_inference_id' can not be None, Provide proper value for this argument.")
-                    _runpod_llm_inference_id=kwargs['runpod_llm_inference_id']
-                    _vllm_api_base = f"https://{_runpod_llm_inference_id}-8000.proxy.runpod.net/v1/chat/completions"
-                    return _RunPodLLamaAgentQwenLLM(
-                        api_url=_vllm_api_base
-                        , overriden_model_name=model_id
-                    )
-                else:
-                    raise NotImplementedError(f"The interface class for '{inferencePlatformType}'-'{modelProvider}' model running on '{inferenceNodeSupplier}' is not implemented yet.")
-            else:
-                raise NotImplementedError(f"The interface class for '{inferencePlatformType}'-'{modelProvider}' model running on '{inferenceNodeSupplier}' is not implemented yet.")
-        else:
-            raise NotImplementedError(f"The interface class for '{inferencePlatformType}'-'{modelProvider}' model running on '{inferenceNodeSupplier}' is not implemented yet.")
-
-
-class _RunPodEmbedding(BaseEmbedding):
+class RunPodLlamaIndexQwenEmbedding(BaseEmbedding):
     endpoint_url: str
 
     def __init__(self, endpoint_url: str, **kwargs):
@@ -170,51 +139,3 @@ class _RunPodEmbedding(BaseEmbedding):
 
     def _get_query_embedding(self, query: str):
         raise NotImplementedError("Sync embedding not implemented.")
-
-
-class MyEmbedder:
-    def __new__(
-        cls
-        , inferenceNodeSupplier:str='runpod'
-        , inferencePlatformType:str='vllm'
-        , **kwargs
-    ):
-        if inferenceNodeSupplier.lower() == 'runpod':
-            if inferencePlatformType.lower() == 'vllm':
-                if kwargs.get('runpod_enbedder_inference_id', 'Not provided') == 'Not provided':
-                    raise TypeError("MyEmbedder object is missing one keyword argument: 'runpod_enbedder_inference_id'")
-                elif not kwargs.get('runpod_enbedder_inference_id', 'Not provided'):
-                    raise TypeError("'runpod_enbedder_inference_id' can not be None, Provide proper value for this argument.")
-                _runpod_enbedder_inference_id=kwargs['runpod_enbedder_inference_id']
-                _vllm_api_base = f"https://{_runpod_enbedder_inference_id}-8000.proxy.runpod.net/v1/embeddings"
-                return _RunPodEmbedding(
-                    endpoint_url=_vllm_api_base
-                )
-            else:
-                raise NotImplementedError(f"The interface class for '{inferencePlatformType}' embedding model running on '{inferenceNodeSupplier}' is not implemented yet.")
-        else:
-            raise NotImplementedError(f"The interface class for '{inferencePlatformType}' embedding model running on '{inferenceNodeSupplier}' is not implemented yet.")
-
-
-def get_models(
-    model_id="gpt-4o-mini"
-    , modelProvider='OpenAI'
-    , inferencePlatformType=''
-    , inferenceNodeSupplier=''
-    , runpod_llm_inference_id = None
-    , runpod_enbedder_inference_id = None
-):
-    return (
-        MyLLM(
-            model_id = model_id
-            , modelProvider = modelProvider
-            , inferencePlatformType = inferencePlatformType
-            , inferenceNodeSupplier = inferenceNodeSupplier
-            , runpod_llm_inference_id = runpod_llm_inference_id
-        )
-        , MyEmbedder(
-            inferencePlatformType = inferencePlatformType
-            , inferenceNodeSupplier = inferenceNodeSupplier
-            , runpod_enbedder_inference_id = runpod_enbedder_inference_id
-        )
-    )

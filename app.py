@@ -7,8 +7,6 @@ from flask import Flask, request
 from rag_utilities.db import get_allowed_data_genres
 from rag_utilities.agent import invoke_rag_agent_workflow, upload_data
 
-
-
 app = Flask(__name__)
 
 

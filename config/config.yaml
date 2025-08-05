@@ -1,0 +1,50 @@
+vector_db:
+  allowed_data_genre:
+    - "educational"
+    - "story"
+    - "cooking"
+    - "persona"
+
+embedding_model:
+  baai:
+    provider: "BAAI"
+    inference_platform: "vLLM"
+    inference_node_supplier: "runpod"
+    model_name: "BAAI/bge-small-en-v1.5"
+
+retriever:
+  top_k: 10
+
+llm:
+  qwen:
+    provider: "Qwen"
+    model_name: "Qwen/Qwen2.5-Coder-7B-Instruct"
+    inference_platform: "vLLM"
+    inference_node_supplier: "runpod"
+    temperature: 0
+    max_output_tokens: 2048
+  openai:
+    provider: "OpenAI"
+    model_name: "openai:gpt-4.1"
+    inference_platform: ""
+    inference_node_supplier: ""
+    temperature: 0
+    max_output_tokens: 2048
+  groq:
+    provider: "Groq"
+    model_name: "deepseek-r1-distill-llama-70b"
+    inference_platform: "vLLM"
+    inference_node_supplier: "runpod"
+    temperature: 0
+    max_output_tokens: 2048
+  google:
+    provider: "Google"
+    model_name: "gemini-2.0-flash"
+    inference_platform: ""
+    inference_node_supplier: ""
+    temperature: 0
+    max_output_tokens: 2048
+
+model_selector:
+  embedding_model: "baai"
+  llm: "qwen"
