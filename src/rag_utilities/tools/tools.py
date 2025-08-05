@@ -7,13 +7,13 @@ from llama_index.core import VectorStoreIndex
 def get_all_tools(llm:MyLLM, embedding_model:MyEmbedder) -> list:
     all_tools = []
     ## Adding internet search tool
-    all_tools.append(
-            FunctionTool.from_defaults(
-            DuckDuckGoSearchToolSpec().duckduckgo_instant_search
-            , name=f'internet_search_tool'
-            , description='A toll to search queries over the internet'
-        )
-    )
+    # all_tools.append(
+    #         FunctionTool.from_defaults(
+    #         DuckDuckGoSearchToolSpec().duckduckgo_instant_search
+    #         , name=f'internet_search_tool'
+    #         , description='A toll to search queries over the internet'
+    #     )
+    # )
 
     for data_genre in get_allowed_data_genres():
         index = VectorStoreIndex.from_vector_store(
