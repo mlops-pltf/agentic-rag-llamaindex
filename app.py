@@ -5,9 +5,12 @@ load_dotenv(dotenv_path)
 
 from flask import Flask, request
 from rag_utilities.db import get_allowed_data_genres
-from rag_utilities.agent import invoke_rag_agent_workflow, upload_data
+from rag_utilities.agent import invoke_rag_agent_workflow
+from rag_utilities.utils import bootstrap_application_and_models
+from rag_utilities.db import upload_data_into_vector_db
 
 app = Flask(__name__)
+app_config, app_models = bootstrap_application_and_models()
 
 
 # Run the system
@@ -16,7 +19,7 @@ async def ask_questions():
     json_content = request.json
     query = json_content.get("query")
     print(f"query: {query}")
-    response = await invoke_rag_agent_workflow(user_msg=query)
+    response = await invoke_rag_agent_workflow(user_msg=query, app_models=app_models)
     print(response)
     response_answer = {
         "answer": str(response)
@@ -31,11 +34,11 @@ async def doc_uploader():
     print(f"Uploading {data_genre} data...")
     file = request.files["file"]
     file_name = file.filename
-    save_file = f"{data_genre}_data/" + file_name
+    save_file = f"raw_data/{data_genre}_data/" + file_name
     print(f"Saving file on device...")
     file.save(save_file)
     print(f"Uploading file - {file_name} to vector DB...")
-    await upload_data(data_genre, [save_file])
+    await upload_data_into_vector_db(data_genre, app_models.embedding_model, [save_file])
     print("Successfully Uploaded.")
     response = {
         "status": "Successfully Uploaded"
