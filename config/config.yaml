@@ -1,5 +1,6 @@
 vector_db:
-  allowed_data_genre:
+  name: "my_local_vector_db_openai_embed"
+  allowed_data_genres:
     - "educational"
     - "story"
     - "cooking"
@@ -8,9 +9,14 @@ vector_db:
 embedding_model:
   baai:
     provider: "baai"
+    model_name: "baai/bge-small-en-v1.5"
     inference_platform: "vllm"
     inference_node_supplier: "runpod"
-    model_name: "baai/bge-small-en-v1.5"
+  openai:
+    provider: "openai"
+    model_name: "text-embedding-3-large"
+    inference_platform: "openai"
+    inference_node_supplier: "openai"
 
 retriever:
   top_k: 10
@@ -46,5 +52,5 @@ llm:
     max_output_tokens: 2048
 
 model_selector:
-  embedding_model: "baai"
+  embedding_model: "openai"
   llm: "openai"

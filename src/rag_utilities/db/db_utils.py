@@ -11,7 +11,7 @@ app_config = get_app_config()
 ALLOWED_DATA_GENRES = app_config.vector_db.allowed_data_genres
 
 def get_chroma_db():
-    return chromadb.PersistentClient(path="./my_local_vector_db")
+    return chromadb.PersistentClient(path=f"./{app_config.vector_db.name}")
 
 def get_allowed_data_genres():
     return ALLOWED_DATA_GENRES
@@ -26,7 +26,7 @@ def get_chroma_vector_store(data_genre:str):
     return ChromaVectorStore(chroma_collection=get_chroma_collection(data_genre))
 
 
-async def get_embeddded_data(documents, pipeline):
+async def _load_embeddded_data(documents, pipeline):
     nodes = list()
     for batch in range(0, len(documents), 200):
         nodes.extend(await pipeline.arun(documents=documents[batch:batch+200]))
@@ -51,5 +51,5 @@ async def upload_data_into_vector_db(data_genre:str, embedding_model:MyEmbedder,
         vector_store=vector_store,
     )
     print('Converting data into embedded vectors and writing to vector DB...')
-    await get_embeddded_data(documents, pipeline)
+    await _load_embeddded_data(documents, pipeline)
 
