@@ -1,0 +1,13 @@
+OLLAMA_INFERENCE_NODE_IP='11.111.11.111'
+OLLAMA_INFERENCE_RUNPOD_ID='shhhfhd'
+VLLM_INFERENCE_NODE_IP='22.222.22.222'
+VLLM_EMBEDDING_MODEL_INFERENCE_NODE_ID='wgwrhrth'
+VLLM_LLM_INFERENCE_NODE_ID='hrhetyh'
+LANGFUSE_PUBLIC_KEY="pk-lf-..."
+LANGFUSE_SECRET_KEY="sk-lf-..."
+# OTEL_EXPORTER_OTLP_ENDPOINT="https://cloud.langfuse.com/api/public/otel" # EU data region
+# OTEL_EXPORTER_OTLP_ENDPOINT="https://us.cloud.langfuse.com/api/public/otel" # US data region
+LANGFUSE_HOST="https://cloud.langfuse.com"
+SERPAPI_API_KEY="hporjthorehw"
+SERPER_API_KEY="qek;jqeogjqer"
+OPENAI_API_KEY="sk-proj-ejgoe;igr"

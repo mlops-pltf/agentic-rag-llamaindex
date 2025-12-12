@@ -17,6 +17,7 @@ app_config, app_models = bootstrap_application_and_models()
 @app.route("/ask_ques", methods=["POST"])
 async def ask_questions():
     json_content = request.json
+    print(json_content)
     query = json_content.get("query")
     print(f"query: {query}")
     response = await invoke_rag_agent_workflow(user_msg=query, app_models=app_models)
